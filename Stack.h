@@ -16,4 +16,11 @@ STACK* create(float value){
     elem -> next = NULL;
     return elem;
 }
+
+
+STACK* push(STACK* L, STACK *elem){
+    STACK * first = L -> next;
+    elem -> next = first;
+    L -> next = elem;
+}
 #endif
