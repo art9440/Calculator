@@ -5,22 +5,49 @@
 #include <stdio.h>
 
 STACK{
-    float value;
+    int value;
     STACK * next;
 };
 
-STACK* create(float value){
-    STACK *elem;
-    elem =(STACK*)malloc(sizeof (STACK));
+
+STACK* create(int value){ //создаем элемент списка
+    STACK * elem;
+    elem = (STACK*)malloc(sizeof (STACK)); //выделили память для эл.
     elem -> value = value;
     elem -> next = NULL;
     return elem;
 }
 
+void push(STACK * L, STACK * elem){ //добавить элемент в список
+    STACK * first = L -> next; //
+    elem -> next = first; //
+    L -> next = elem; //
+}
 
-STACK* push(STACK* L, STACK *elem){
-    STACK * first = L -> next;
-    elem -> next = first;
-    L -> next = elem;
+
+int empty(STACK *L){ //проверка списка на пустоту
+    if (L -> next)
+        return 1;
+    return 0;
+}
+
+int pop(STACK * L){ //удаление элемента из списка и получение его значения
+    if (!empty(L)){
+        STACK * old =L -> next;
+        L -> next = old -> next;
+        int r = old -> value;
+        free(old);
+        return r;
+    }
+    return 0;
+}
+
+
+int get(STACK * L){ //получить значение верхнего элемента
+    if (!empty(L)){
+        STACK * cur = L -> next;
+        int r = cur -> value;
+        return r;
+    }
 }
 #endif
