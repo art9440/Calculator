@@ -48,17 +48,17 @@ char* PostFixPolka(char *calc_str, STACK * calculator){
     int calc_len = strlen(calc_str);
     post_calc_str = (char*)malloc(sizeof(char));
     int k_num = 0;
-    for (int i = 0; i < strlen(calc_str); i++){
+    for (int i = 0; i < calc_len; i++){
         /*if (isalpha(calc_str[i]) || isoperand(calc_str[i]) == 0)
             return "syntax error";
         if (checknear(calc_str[i], calc_str[i + 1]) == 0)
             return "syntax error";*/
         if (isdigit(calc_str[i])) {
-            post_calc_str[k_num] == calc_str[i];
+            post_calc_str[k_num] = calc_str[i];
             k_num++;
         }
-        if (isoperand(calc_str[i])) {
-            k_num++;
+        else if (isoperand(calc_str[i]) || calc_str[i]
+        == "(" || calc_str[i] == ")") {
             if (empty(calculator) == 0 || get(calculator) == "(")
                 push(calculator, create(calc_str[i]));
             if (priority(calc_str[i]) > priority(get(calculator)))
@@ -66,7 +66,7 @@ char* PostFixPolka(char *calc_str, STACK * calculator){
             if (priority(calc_str[i]) <= priority(get(calculator)))
                 while (priority(calc_str[i]) <= priority(get(calculator))
                        || get(calculator) != "(") {
-                    post_calc_str[k_num] == pop(calculator);
+                    post_calc_str[k_num] = (char) pop(calculator);
                     k_num++;
                 }
         }
@@ -74,16 +74,17 @@ char* PostFixPolka(char *calc_str, STACK * calculator){
             push(calculator, create(calc_str[i]));
         if (calc_str[i] == ")") {
             while (get(calculator) != "(") {
-                post_calc_str[k_num] = pop(calculator);
+                post_calc_str[k_num] = (char) pop(calculator);
                 k_num++;
             }
             int bin = pop(calculator);
         }
         }
     while (!empty(calculator)){
-        post_calc_str[k_num] = pop(calculator);
+        post_calc_str[k_num] = (char) pop(calculator);
         k_num ++;
     }
+    return post_calc_str;
     }
 
 
@@ -93,14 +94,15 @@ int main(){
     STACK * calculator;
     calculator = create(0);
     calc_str = (char*)malloc(sizeof(char));
-    scanf("%s", calc_str);
+    gets(calc_str);
     char* post_calc_str = PostFixPolka(calc_str, calculator);
     /*if (strcmp(post_calc_str, "syntax error")) {
         puts("syntax error");
         return 0;
     }*/
-    for (int i = 0; i < strlen(post_calc_str); i++)
-        printf("%c", post_calc_str[i]);
+    printf("%s", post_calc_str);
 
+    free(post_calc_str);
+    free(calc_str);
     return 0;
 }
