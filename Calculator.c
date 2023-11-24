@@ -56,28 +56,33 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
         if (checknear(calc_str[i], calc_str[i + 1]) == 0)
             return "syntax error";*/
 
-        if (isdigit(calc_str[i])) {
+        if (isdigit(calc_str[i]))
             post_calc_str[k_num++] = calc_str[i];
-        }
+
         else if (isoperand(calc_str[i])) {
             post_calc_str[k_num++] = ' ';
 
-            if (empty(calculator)) {
+            if (empty(calculator))
                 push(calculator, create(calc_str[i]));
-            }
-            else {
-                if (calc_str[i] == '(') {
+
+            else
+            {
+                if (calc_str[i] == '(')
                     push(calculator, create(calc_str[i]));
-                } else if (calc_str[i] == ')') {
+
+                else if (calc_str[i] == ')') {
                     symbol = (char) pop(calculator);
                     while (symbol != '(') {
                         post_calc_str[k_num++] = symbol;
                         symbol = (char) pop(calculator);
                     }
-                } else if (priority(calc_str[i]) > priority((char) get(calculator))) {
+                }
+
+                else if (priority(calc_str[i]) > priority((char) get(calculator)))
                     push(calculator, create(calc_str[i]));
-                } else {
-                    while (priority(calc_str[i]) <= priority((char) get(calculator))) {
+
+                else {
+                    while (priority(calc_str[i]) <= priority((char) get(calculator))){
                         post_calc_str[k_num++] = (char) pop(calculator);
                         if (empty(calculator))
                             break;
