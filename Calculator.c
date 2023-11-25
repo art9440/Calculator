@@ -46,11 +46,11 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
             post_calc_str[k_num++] = calc_str[i];
 
         else if (isoperand(calc_str[i]) || calc_str[i] == '(' || calc_str[i] == ')') {
-            if (isoperand(calc_str[i-1]) && strchr("()", calc_str[i]) != NULL)
-                return "syntax error";
             if (calc_str[i - 1] == '(' && calc_str[i] == ')')
                 return "syntax error";
             if (calc_str[i - 1] == ')' && calc_str[i] == '(')
+                return "syntax error";
+            if (isoperand(calc_str[i -1]) && isoperand(calc_str[i]))
                 return "syntax error";
 
             post_calc_str[k_num++] = ' ';
@@ -117,32 +117,39 @@ void calculating(char*post_calc_str, STACK * calculator){
                 putin += cur * pow(10, raz);
                 raz++;
             }
-            if (putin != 0) {
+            if (num_len != 0) {
+
                 push(calculator, create(putin));
 
                 for (int k = 0; k < num_len; k++)
                     number[k] = '\0';
                 num_len = 0;
             }
+
             if (isoperand(post_calc_str[i])){
-                int total = 0;
+                int total;
                 if (post_calc_str[i] == '+') {
                     total = pop(calculator) + pop(calculator);
                     push(calculator, create(total));
                 }
-                else if(post_calc_str[i] == '-') {
+                if(post_calc_str[i] == '-') {
                     int second = pop(calculator);
                     int first = pop(calculator);
+
                     total = first - second;
                     push(calculator, create(total));
                 }
-                else if(post_calc_str[i] == '*'){
+                if(post_calc_str[i] == '*'){
                     total = pop(calculator) * pop(calculator);
                     push(calculator, create(total));
                 }
-                else if(post_calc_str[i] == '/'){
+                if(post_calc_str[i] == '/'){
                     int second = pop(calculator);
                     int first = pop(calculator);
+                    if (second == 0){
+                        printf("%s", "division by zero");
+                        exit(0);
+                    }
                     total = first / second;
                     push(calculator, create(total));
                 }
@@ -179,7 +186,7 @@ int main(){
         printf("%s", "syntax error");
         return 0;
     }
-    //printf("Polka: %s\n", post_calc_str);
+    printf("Polka: %s\n", post_calc_str);
     calculating(post_calc_str, calculator);
 
     free(post_calc_str);
