@@ -6,7 +6,7 @@
 #include <math.h>
 
 int isoperand(char sym){
-    char operation[6] = "+-/*()";
+    char operation[6] = "+-/*";
     if (strchr(operation, sym) == NULL)
         return 0;
     return 1;
@@ -37,11 +37,22 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
     post_calc_str = (char *) malloc((calc_len + 1) * sizeof(char));
     int k_num = 0;
     char symbol;
+
+    if (isoperand(calc_str[0]))
+        return "syntax error";
+
     for (int i = 0; i < calc_len; i++) {
         if (isdigit(calc_str[i]))
             post_calc_str[k_num++] = calc_str[i];
 
-        else if (isoperand(calc_str[i])) {
+        else if (isoperand(calc_str[i]) || calc_str[i] == '(' || calc_str[i] == ')') {
+            if (isoperand(calc_str[i-1]) && strchr("()", calc_str[i]) != NULL)
+                return "syntax error";
+            if (calc_str[i - 1] == '(' && calc_str[i] == ')')
+                return "syntax error";
+            if (calc_str[i - 1] == ')' && calc_str[i] == '(')
+                return "syntax error";
+
             post_calc_str[k_num++] = ' ';
 
             if (empty(calculator))
@@ -79,9 +90,11 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
             return "syntax error";
     }
 
-    while (!empty(calculator)) {
-        post_calc_str[k_num++] = (char)pop(calculator);
-    }
+    while (!empty(calculator))
+        post_calc_str[k_num++] = (char) pop(calculator);
+
+    if (strlen(post_calc_str) == 0)
+        return "syntax error";
 
     post_calc_str[k_num] = '\0';
     return post_calc_str;
@@ -141,18 +154,32 @@ void calculating(char*post_calc_str, STACK * calculator){
 
 }
 
+int checkForError(char* calc_str){
+    for (int i = 0;i < strlen(calc_str); i++){
+        if (isdigit(calc_str[i]))
+            return 1;
+    }
+    return 0;
+}
+
+
 int main(){
     char* calc_str;
     STACK * calculator;
     calculator = create(0);
     calc_str = (char*)malloc(sizeof(char));
     gets(calc_str);
-    char* post_calc_str = PostFixPolka(calc_str, calculator);
-    if (strcmp(post_calc_str, "syntax error") == 0){
-        puts("syntax error");
+    if (checkForError(calc_str) == 0){
+        printf("%s", "syntax error");
         return 0;
     }
-    printf("Polka: %s\n", post_calc_str);
+
+    char* post_calc_str = PostFixPolka(calc_str, calculator);
+    if (strcmp(post_calc_str, "syntax error") == 0){
+        printf("%s", "syntax error");
+        return 0;
+    }
+    //printf("Polka: %s\n", post_calc_str);
     calculating(post_calc_str, calculator);
 
     free(post_calc_str);
