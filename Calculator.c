@@ -100,20 +100,45 @@ void calculating(char*post_calc_str, STACK * calculator){
             int putin = 0;
             int raz = 0;
             for (int j = num_len - 1; j > -1;j--){
-                int cur = ((int) number[j]) - 48;
+                int cur = (number[j]) - '0';
                 putin += cur * pow(10, raz);
                 raz++;
             }
             if (putin != 0) {
-                //printf("%d\n", putin);
                 push(calculator, create(putin));
+
                 for (int k = 0; k < num_len; k++)
                     number[k] = '\0';
                 num_len = 0;
             }
+            if (isoperand(post_calc_str[i])){
+                int total = 0;
+                if (post_calc_str[i] == '+') {
+                    total = pop(calculator) + pop(calculator);
+                    push(calculator, create(total));
+                }
+                else if(post_calc_str[i] == '-') {
+                    int second = pop(calculator);
+                    int first = pop(calculator);
+                    total = first - second;
+                    push(calculator, create(total));
+                }
+                else if(post_calc_str[i] == '*'){
+                    total = pop(calculator) * pop(calculator);
+                    push(calculator, create(total));
+                }
+                else if(post_calc_str[i] == '/'){
+                    int second = pop(calculator);
+                    int first = pop(calculator);
+                    total = first / second;
+                    push(calculator, create(total));
+                }
+            }
         }
     }
-    print(calculator);
+
+    printf("%d\n", pop(calculator));
+
 }
 
 int main(){
