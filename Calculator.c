@@ -40,20 +40,31 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
     if (isoperand(calc_str[0]))
         return "syntax error";
-
+    int bracket_lf = 0;
+    int bracket_rg = 0;
     for (int i = 0; i < calc_len; i++) {
+
         if (isdigit(calc_str[i]))
             post_calc_str[k_num++] = calc_str[i];
 
         else if (isoperand(calc_str[i]) || calc_str[i] == '(' || calc_str[i] == ')') {
-            if (calc_str[i - 1] == '(' && calc_str[i] == ')')
+            if (calc_str[i] == '(')
+                bracket_lf++;
+
+            if (calc_str[i] == ')')
+                bracket_rg++;
+
+            if (bracket_rg > bracket_lf)
                 return "syntax error";
-            if (calc_str[i - 1] == ')' && calc_str[i] == '(')
+            if (calc_str[i - 1] == '(' && calc_str[i] == ')')
                 return "syntax error";
             if (isoperand(calc_str[i -1]) && isoperand(calc_str[i]))
                 return "syntax error";
+            if (isoperand(calc_str[i]) && calc_str[i+1] == '\0')
+                return "syntax error";
 
-            post_calc_str[k_num++] = ' ';
+            if (i != 0 && post_calc_str[k_num-1] != ' ')
+                post_calc_str[k_num++] = ' ';
 
             if (empty(calculator))
                 push(calculator, create(calc_str[i]));
@@ -62,6 +73,7 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
             {
                 if (calc_str[i] == '(')
                     push(calculator, create(calc_str[i]));
+
 
                 else if (calc_str[i] == ')') {
                     symbol = (char) pop(calculator);
@@ -95,6 +107,8 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
     if (strlen(post_calc_str) == 0)
         return "syntax error";
+    if (bracket_lf != bracket_rg)
+        return "syntax error";
 
     post_calc_str[k_num] = '\0';
     return post_calc_str;
@@ -108,6 +122,10 @@ void calculating(char*post_calc_str, STACK * calculator){
         if (isdigit(post_calc_str[i])) {
             number[num_len++] = post_calc_str[i];
             number[num_len] = '\0';
+        }
+        if (num_len == post_calc_len) {
+            printf("%s", number);
+            exit(0);
         }
         if (isoperand(post_calc_str[i]) || post_calc_str[i] == ' '){
             int putin = 0;
@@ -169,7 +187,6 @@ int checkForError(char* calc_str){
     return 0;
 }
 
-
 int main(){
     char* calc_str;
     STACK * calculator;
@@ -186,7 +203,7 @@ int main(){
         printf("%s", "syntax error");
         return 0;
     }
-    printf("Polka: %s\n", post_calc_str);
+    //printf("Polka: %s\n", post_calc_str);
     calculating(post_calc_str, calculator);
 
     free(post_calc_str);
