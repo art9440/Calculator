@@ -5,6 +5,7 @@
 #include "Stack.h"
 #include <math.h>
 
+
 int isoperand(char sym){
     char operation[6] = "+-/*";
     if (strchr(operation, sym) == NULL)
@@ -33,7 +34,6 @@ int priority(char sym){
 
 char* PostFixPolka(char *calc_str, STACK * calculator) {
     char *post_calc_str;
-    //printf("%s", calc_str);
     int calc_len = strlen(calc_str);
     post_calc_str = (char *) malloc(2020 * sizeof(char));
     int k_num = 0;
@@ -41,8 +41,10 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
     if (isoperand(calc_str[0]))
         return "syntax error";
+
     int bracket_lf = 0;
     int bracket_rg = 0;
+
     for (int i = 0; i < calc_len; i++) {
 
         if (isdigit(calc_str[i]))
@@ -206,7 +208,7 @@ int main(){
         printf("%s", "syntax error");
         return 0;
     }
-    //printf("Polka: %s\n", post_calc_str);
+
     calculating(post_calc_str, calculator);
 
     free(post_calc_str);
