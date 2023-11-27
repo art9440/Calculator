@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -32,8 +31,8 @@ int priority(char sym){
 }
 
 
-char* PostFixPolka(char *calc_str, STACK * calculator) {
-    char *post_calc_str;
+char* PostFixPolka(char *calc_str, STACK * calculator){  //from infix
+    char *post_calc_str;                                 //to postfix record
     int calc_len = strlen(calc_str);
     post_calc_str = (char *) malloc((calc_len+1) * sizeof(char));
     int k_num = 0;
@@ -49,10 +48,13 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
         if (isdigit(calc_str[i])) {
             post_calc_str[k_num++] = calc_str[i];
-            post_calc_str = (char *) realloc(post_calc_str, (strlen(post_calc_str) +1) * sizeof(char));
+            post_calc_str = (char *)realloc(post_calc_str,
+                                            (strlen(post_calc_str) +1)
+                                            * sizeof(char));
         }
 
-        else if (isoperand(calc_str[i]) || calc_str[i] == '(' || calc_str[i] == ')') {
+        else if (isoperand(calc_str[i]) || calc_str[i] == '('
+        || calc_str[i] == ')') {
             if (calc_str[i] == '(')
                 bracket_lf++;
 
@@ -70,7 +72,9 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
             if (i != 0 && post_calc_str[k_num-1] != ' ') {
                 post_calc_str[k_num++] = ' ';
-                post_calc_str = (char *) realloc(post_calc_str, (strlen(post_calc_str) +1) * sizeof(char));
+                post_calc_str = (char *)realloc(post_calc_str,
+                                                 (strlen(post_calc_str) +1)
+                                                 * sizeof(char));
             }
 
             if (empty(calculator))
@@ -87,19 +91,23 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
                     while (symbol != '(') {
                         post_calc_str[k_num++] = symbol;
-                        post_calc_str = (char *) realloc(post_calc_str, (strlen(post_calc_str) +1) * sizeof(char));
+                        post_calc_str =(char*)realloc(post_calc_str,
+                                                      (strlen(post_calc_str)+1)
+                                                      * sizeof(char));
                         symbol = (char) pop(calculator);
                     }
                 }
 
-                else if (priority(calc_str[i]) > priority((char) get(calculator)))
+                else if(priority(calc_str[i]) >priority((char)get(calculator)))
                     push(calculator, create(calc_str[i]));
 
                 else {
                     while (priority(calc_str[i]) <=
                            priority((char) get(calculator))){
                         post_calc_str[k_num++] = (char) pop(calculator);
-                        post_calc_str = (char *) realloc(post_calc_str, (strlen(post_calc_str) +1) * sizeof(char));
+                        post_calc_str =(char*)realloc(post_calc_str,
+                                                      (strlen(post_calc_str)+1)
+                                                        * sizeof(char));
                         if (empty(calculator))
                             break;
                     }
@@ -113,8 +121,9 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
     while (!empty(calculator)) {
         post_calc_str[k_num++] = (char) pop(calculator);
-        post_calc_str = (char *) realloc(post_calc_str,
-                                         (strlen(post_calc_str) +1) * sizeof(char));
+        post_calc_str = (char*)realloc(post_calc_str,
+                                         (strlen(post_calc_str)+1)
+                                         * sizeof(char));
     }
 
     if (strlen(post_calc_str) == 0)
@@ -127,8 +136,9 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
     return post_calc_str;
 }
 
-void calculating(char*post_calc_str, STACK * calculator){
-    int post_calc_len = strlen(post_calc_str);
+
+void calculating(char*post_calc_str, STACK * calculator){ //calculating
+    int post_calc_len = strlen(post_calc_str);        //postfix record
     char *number = (char*)malloc( sizeof (char));
     int num_len = 0;
     for (int i = 0;i < post_calc_len;i++){
@@ -136,10 +146,12 @@ void calculating(char*post_calc_str, STACK * calculator){
             number[num_len++] = post_calc_str[i];
             number[num_len] = '\0';
         }
+
         if (num_len == post_calc_len) {
             printf("%s", number);
             exit(0);
         }
+
         if (isoperand(post_calc_str[i]) || post_calc_str[i] == ' '){
             int putin = 0;
             int raz = 0;
@@ -187,12 +199,11 @@ void calculating(char*post_calc_str, STACK * calculator){
             }
         }
     }
-
     printf("%d\n", pop(calculator));
-
 }
 
-int checkForError(char* calc_str){
+
+int checkForError(char* calc_str){       //checking for existing of numbers
     for (int i = 0;i < strlen(calc_str); i++){
         if (isdigit(calc_str[i]))
             return 1;
@@ -200,12 +211,14 @@ int checkForError(char* calc_str){
     return 0;
 }
 
+
 int main(){
     char* calc_str;
     STACK * calculator;
     calculator = create(0);
     calc_str = (char*)malloc( 2000 * sizeof(char));
     gets(calc_str);
+
     if (checkForError(calc_str) == 0){
         printf("%s", "syntax error");
         return 0;
