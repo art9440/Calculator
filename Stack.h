@@ -4,6 +4,7 @@
 #include <malloc.h>
 #include <stdio.h>
 
+
 STACK{
     int value;
     STACK * next;
@@ -12,16 +13,16 @@ STACK{
 
 STACK* create(int value){ //создаем элемент списка
     STACK * elem;
-    elem = (STACK*)malloc(sizeof (STACK)); //выделили память для эл.
+    elem = (STACK*)malloc(sizeof (STACK));
     elem -> value = value;
     elem -> next = NULL;
     return elem;
 }
 
 void push(STACK * L, STACK * elem){ //добавить элемент в список
-    STACK * first = L -> next; //
-    elem -> next = first; //
-    L -> next = elem; //
+    STACK * first = L -> next;
+    elem -> next = first;
+    L -> next = elem;
 }
 
 
@@ -50,14 +51,6 @@ int get(STACK * L){ //получить значение верхнего эле�
         return r;
     }
     return 0;
-}
-
-void print(STACK * L){
-    STACK * ptr = L -> next; //переводим в первый элемент списка
-    while (ptr) { //пока существует ссылка на что-то у элемента
-        printf("%c\n", ptr->value);
-        ptr = ptr -> next; //передвигаемся дальше по списку
-    }
 }
 
 
