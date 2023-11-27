@@ -33,8 +33,9 @@ int priority(char sym){
 
 char* PostFixPolka(char *calc_str, STACK * calculator) {
     char *post_calc_str;
+    //printf("%s", calc_str);
     int calc_len = strlen(calc_str);
-    post_calc_str = (char *) malloc((calc_len + 1) * sizeof(char));
+    post_calc_str = (char *) malloc(2020 * sizeof(char));
     int k_num = 0;
     char symbol;
 
@@ -100,6 +101,7 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
         }
         else
             return "syntax error";
+
     }
 
     while (!empty(calculator))
@@ -110,13 +112,14 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
     if (bracket_lf != bracket_rg)
         return "syntax error";
 
+
     post_calc_str[k_num] = '\0';
     return post_calc_str;
 }
 
 void calculating(char*post_calc_str, STACK * calculator){
     int post_calc_len = strlen(post_calc_str);
-    char *number = (char*) malloc( sizeof (char));
+    char *number = (char*)malloc( sizeof (char));
     int num_len = 0;
     for (int i = 0;i < post_calc_len;i++){
         if (isdigit(post_calc_str[i])) {
@@ -191,7 +194,7 @@ int main(){
     char* calc_str;
     STACK * calculator;
     calculator = create(0);
-    calc_str = (char*)malloc(2000 * sizeof(char));
+    calc_str = (char*)malloc( 2000 * sizeof(char));
     gets(calc_str);
     if (checkForError(calc_str) == 0){
         printf("%s", "syntax error");
