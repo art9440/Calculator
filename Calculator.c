@@ -35,7 +35,7 @@ int priority(char sym){
 char* PostFixPolka(char *calc_str, STACK * calculator) {
     char *post_calc_str;
     int calc_len = strlen(calc_str);
-    post_calc_str = (char *) malloc(2020 * sizeof(char));
+    post_calc_str = (char *) malloc((calc_len+1) * sizeof(char));
     int k_num = 0;
     char symbol;
 
@@ -47,8 +47,10 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
     for (int i = 0; i < calc_len; i++) {
 
-        if (isdigit(calc_str[i]))
+        if (isdigit(calc_str[i])) {
             post_calc_str[k_num++] = calc_str[i];
+            post_calc_str = (char *) realloc(post_calc_str, (strlen(post_calc_str) +1) * sizeof(char));
+        }
 
         else if (isoperand(calc_str[i]) || calc_str[i] == '(' || calc_str[i] == ')') {
             if (calc_str[i] == '(')
@@ -66,8 +68,10 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
             if (isoperand(calc_str[i]) && calc_str[i+1] == '\0')
                 return "syntax error";
 
-            if (i != 0 && post_calc_str[k_num-1] != ' ')
+            if (i != 0 && post_calc_str[k_num-1] != ' ') {
                 post_calc_str[k_num++] = ' ';
+                post_calc_str = (char *) realloc(post_calc_str, (strlen(post_calc_str) +1) * sizeof(char));
+            }
 
             if (empty(calculator))
                 push(calculator, create(calc_str[i]));
@@ -83,6 +87,7 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
                     while (symbol != '(') {
                         post_calc_str[k_num++] = symbol;
+                        post_calc_str = (char *) realloc(post_calc_str, (strlen(post_calc_str) +1) * sizeof(char));
                         symbol = (char) pop(calculator);
                     }
                 }
@@ -94,6 +99,7 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
                     while (priority(calc_str[i]) <=
                            priority((char) get(calculator))){
                         post_calc_str[k_num++] = (char) pop(calculator);
+                        post_calc_str = (char *) realloc(post_calc_str, (strlen(post_calc_str) +1) * sizeof(char));
                         if (empty(calculator))
                             break;
                     }
@@ -103,11 +109,13 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
         }
         else
             return "syntax error";
-
     }
 
-    while (!empty(calculator))
+    while (!empty(calculator)) {
         post_calc_str[k_num++] = (char) pop(calculator);
+        post_calc_str = (char *) realloc(post_calc_str,
+                                         (strlen(post_calc_str) +1) * sizeof(char));
+    }
 
     if (strlen(post_calc_str) == 0)
         return "syntax error";
