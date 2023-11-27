@@ -89,7 +89,7 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
                 else {
                     while (priority(calc_str[i]) <=
-                    priority((char) get(calculator))){
+                           priority((char) get(calculator))){
                         post_calc_str[k_num++] = (char) pop(calculator);
                         if (empty(calculator))
                             break;
@@ -116,7 +116,7 @@ char* PostFixPolka(char *calc_str, STACK * calculator) {
 
 void calculating(char*post_calc_str, STACK * calculator){
     int post_calc_len = strlen(post_calc_str);
-    char *number = (char*) malloc(sizeof (char));
+    char *number = (char*) malloc( sizeof (char));
     int num_len = 0;
     for (int i = 0;i < post_calc_len;i++){
         if (isdigit(post_calc_str[i])) {
@@ -191,7 +191,7 @@ int main(){
     char* calc_str;
     STACK * calculator;
     calculator = create(0);
-    calc_str = (char*)malloc(sizeof(char));
+    calc_str = (char*)malloc(2000 * sizeof(char));
     gets(calc_str);
     if (checkForError(calc_str) == 0){
         printf("%s", "syntax error");
