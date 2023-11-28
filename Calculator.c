@@ -4,6 +4,7 @@
 #include "Stack.h"
 #include <math.h>
 
+#define MAX_SIZE 1001
 
 int isoperand(char sym){
     char operation[6] = "+-/*";
@@ -211,10 +212,10 @@ int checkForError(char* calc_str){       //checking for existing of numbers
 
 
 int main(){
-    char* calc_str;
+    char *calc_str;
     STACK * calculator;
     calculator = create(0);
-    calc_str = (char*)malloc( 2000 * sizeof(char));
+    calc_str = (char*)malloc(MAX_SIZE * sizeof(char));
     gets(calc_str);
 
     if (checkForError(calc_str) == 0){
