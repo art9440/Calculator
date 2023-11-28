@@ -190,7 +190,7 @@ void calculating(char*post_calc_str, STACK * calculator){ //calculating
                     int first = pop(calculator);
                     if (second == 0){
                         printf("%s", "division by zero");
-                        exit(0);
+                        return;
                     }
                     total = first / second;
                     push(calculator, create(total));
