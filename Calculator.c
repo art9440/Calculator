@@ -108,8 +108,6 @@ char* PostFixPolka(char *calc_str, STACK * calculator){  //from infix
                         post_calc_str =(char*)realloc(post_calc_str,
                                                       (strlen(post_calc_str)+1)
                                                         * sizeof(char));
-                        if (empty(calculator))
-                            break;
                     }
                     push(calculator, create(calc_str[i]));
                 }
